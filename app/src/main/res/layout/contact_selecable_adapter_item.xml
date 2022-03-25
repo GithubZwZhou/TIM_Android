@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="beanWrapper"
+            type="com.tencent.qcloud.tim.demo.contact.ContactItemBeanWrapper" />
+<!--        <variable-->
+<!--            name="beanWrapper"-->
+<!--            type="com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean" />-->
+
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/selectable_contact_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:focusable="true"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="15.36dp"
+            android:paddingEnd="5dp">
+
+            <CheckBox
+                android:id="@+id/contact_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:button="@drawable/checkbox_selector"
+                android:clickable="false"
+                android:focusable="false"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <com.tencent.qcloud.tuicore.component.gatherimage.ShadeImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="@dimen/contact_avatar_width"
+                android:layout_height="@dimen/contact_avatar_height"
+                android:clickable="false"
+                android:focusable="false"
+                android:paddingStart="15.36dp"
+                android:src="@drawable/demo_ic_logo_light"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/contact_check_box"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:paddingStart="11.5dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivAvatar"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tvCity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="false"
+                    android:clickable="false"
+                    android:ellipsize="end"
+                    android:focusable="false"
+                    android:singleLine="true"
+                    android:text="@{beanWrapper.target}"
+                    android:textColor="@color/black_font_color"
+                    android:textSize="17.28sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Friend 12138" />
+
+                <TextView
+                    android:id="@+id/tvHistory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="10dp"
+                    android:clickable="false"
+                    android:ellipsize="end"
+                    android:focusable="false"
+                    android:singleLine="true"
+                    android:textColor="@color/black_font_color"
+                    android:textSize="15sp"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvCity"
+                    app:layout_constraintStart_toEndOf="@id/tvCity"
+                    tools:text="咨询过" />
+
+                <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:isIndicator="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvCity" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="73.78dp"
+            android:background="@color/split_lint_color" />
+
+    </RelativeLayout>
+</layout>
