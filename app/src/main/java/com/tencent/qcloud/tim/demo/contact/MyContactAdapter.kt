@@ -80,64 +80,24 @@ class MyContactAdapter : RecyclerView.Adapter<MyContactAdapter.ViewHolder>() {
             }
             mPreSelectedPosition = position
         })
-//        holder.childBinding.conversationUnread.visibility = View.GONE
-        when (contactBeanWrapper.bean.id) {
-            TUIContactService.getAppContext().resources.getString(R.string.new_friend) -> {
-                holder.childBinding.ivAvatar.setImageResource(
-                    TUIThemeManager.getAttrResId(
-                        holder.itemView.context,
-                        R.attr.contact_new_friend_icon
-                    )
-                )
-                presenter!!.getFriendApplicationUnreadCount(object : IUIKitCallback<Int> {
-                    override fun onSuccess(data: Int) {
-//                        if (data == 0) {
-//                            holder.childBinding.conversationUnread.visibility = View.GONE
-//                        } else {
-//                            holder.childBinding.conversationUnread.visibility = View.VISIBLE
-//                            holder.childBinding.conversationUnread.text = data.toString()
-//                        }
-                    }
 
-                    override fun onError(module: String, errCode: Int, errMsg: String) {
-                        ToastUtil.toastShortMessage("Error code = $errCode, desc = $errMsg")
-                    }
-                })
-            }
-            TUIContactService.getAppContext().resources.getString(R.string.group) -> {
-                holder.childBinding.ivAvatar.setImageResource(
-                    TUIThemeManager.getAttrResId(
-                        holder.itemView.context,
-                        R.attr.contact_group_list_icon
-                    )
-                )
-                holder.childBinding.ivAvatar.setImageResource(
-                    TUIThemeManager.getAttrResId(
-                        holder.itemView.context,
-                        R.attr.contact_black_list_icon
-                    )
-                )
-            }
-            else -> {
-                val radius =
-                    holder.itemView.resources.getDimensionPixelSize(R.dimen.contact_profile_face_radius)
-                if (isGroupList) {
-                    GlideEngine.loadUserIcon(
-                        holder.childBinding.ivAvatar,
-                        contactBeanWrapper.bean.avatarUrl,
-                        TUIThemeManager.getAttrResId(
-                            holder.childBinding.ivAvatar.context, R.attr.core_default_group_icon
-                        ),
-                        radius
-                    )
-                } else {
-                    GlideEngine.loadUserIcon(
-                        holder.childBinding.ivAvatar,
-                        contactBeanWrapper.bean.avatarUrl,
-                        radius
-                    )
-                }
-            }
+        val radius =
+            holder.itemView.resources.getDimensionPixelSize(R.dimen.contact_profile_face_radius)
+        if (isGroupList) {
+            GlideEngine.loadUserIcon(
+                holder.childBinding.ivAvatar,
+                contactBeanWrapper.bean.avatarUrl,
+                TUIThemeManager.getAttrResId(
+                    holder.childBinding.ivAvatar.context, R.attr.core_default_group_icon
+                ),
+                radius
+            )
+        } else {
+            GlideEngine.loadUserIcon(
+                holder.childBinding.ivAvatar,
+                contactBeanWrapper.bean.avatarUrl,
+                radius
+            )
         }
     }
 

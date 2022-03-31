@@ -35,10 +35,8 @@ class MyTUIC2CChatFragment : MyTUIBaseChatFragment() {
         // TODO 这里的入口是完成评价的界面
         mTitleBar.setOnRightClickListener {
             val intent = Intent(requireActivity(), ChatFinishActivity::class.java)
-            val bundle = Bundle()
-            bundle.putString("chatId", mChatInfo!!.id)
+            intent.putExtra("chatId", mChatInfo!!.id)
             startActivity(intent)
-//            TUICore.startActivity("FriendProfileActivity", bundle)
         }
         mBinding.chatLayout.setPresenter(mPresenter)
         mPresenter!!.chatInfo = mChatInfo

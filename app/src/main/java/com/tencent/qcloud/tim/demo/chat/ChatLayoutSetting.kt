@@ -9,7 +9,7 @@ import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView
 
 class ChatLayoutSetting {
     private var groupId: String? = null
-    private var conversationDuring = 0
+    private var conversationDuring = 0L
     private var mRunnable: Runnable? = null
     private lateinit var startTimeHandler: Handler
 
@@ -17,19 +17,21 @@ class ChatLayoutSetting {
         this.groupId = groupId
     }
 
-    fun setStartTime(time: Int) {
-        conversationDuring = time
-    }
-
-    fun customizeMessageLayout(messageRecyclerView: MessageRecyclerView) {
-
+    fun setStartTime(time: Long) {
+        conversationDuring = System.currentTimeMillis() - time
     }
 
     fun customizeChatLayout(layout: ChatView) {
         startTimeHandler = Handler(Looper.getMainLooper()) { msg ->
-            layout.titleBar.rightTitle.text = msg.obj.toString()
-            layout.invalidate()
-            return@Handler true
+            if (msg.what == MSG_TYPE.UPDATE_TITLE_MSG_TYPE.ordinal) {
+                layout.titleBar.rightTitle.text = msg.obj.toString()
+                layout.invalidate()
+                return@Handler true
+            } else if (msg.what == MSG_TYPE.CONVERSATION_WARN.ordinal) {
+                return@Handler true
+            } else {
+                return@Handler true
+            }
         }
     }
 
@@ -38,16 +40,26 @@ class ChatLayoutSetting {
         mRunnable = object : Runnable {
             override fun run() {
                 conversationDuring += 1
-                val msg = Message.obtain()
-                msg.obj = "${conversationDuring / 3600}:${conversationDuring / 60 % 60}:${conversationDuring % 60}"
-                startTimeHandler.sendMessage(msg)
-                startTimeHandler.postDelayed(this, 1000)
+                if (conversationDuring == CONVERSATION_END) {
+                    // TODO 结束会话
+                    stopChronometer()
+                } else if (conversationDuring >= CONVERSATION_WARN) {
+                    // TODO 提醒用户
+                } else {
+                    // 更新计时
+                    val msg = Message.obtain()
+                    msg.what = MSG_TYPE.UPDATE_TITLE_MSG_TYPE.ordinal
+                    msg.obj =
+                        "${conversationDuring / 3600}:${conversationDuring / 60 % 60}:${conversationDuring % 60}"
+                    startTimeHandler.sendMessage(msg)
+                    startTimeHandler.postDelayed(this, 1000)
+                }
             }
         }
         startTimeHandler.post(mRunnable!!)
     }
 
-    fun stopChronometer(): Int {
+    fun stopChronometer(): Long {
         mRunnable?.let {
             startTimeHandler.removeCallbacks(it)
             mRunnable = null
@@ -57,5 +69,11 @@ class ChatLayoutSetting {
 
     companion object {
         private val TAG = ChatLayoutSetting::class.java.simpleName
+        private const val CONVERSATION_WARN = 600L
+        private const val CONVERSATION_END = 900L
+
+        private enum class MSG_TYPE {
+            UPDATE_TITLE_MSG_TYPE, CONVERSATION_WARN, CONVERSATION_END
+        }
     }
 }

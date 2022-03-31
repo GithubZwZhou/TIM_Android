@@ -162,4 +162,17 @@
 
     <string name="demo_profile_detail">详细资料</string>
 
+    <!--咨询师耗时-->
+    <string name="conversation_cost">
+        咨询师 %s 已为您服务 %s 分钟，是否愿意就他的服务进行反馈？
+    </string>
+    <string name="conversation_comment">
+        请在下方输入您的评价内容
+    </string>
+    <string name="conversation_star">
+        请对其服务进行打分
+    </string>
+    <string name="commit_comment_str">提交评价</string>
+
+
 </resources>

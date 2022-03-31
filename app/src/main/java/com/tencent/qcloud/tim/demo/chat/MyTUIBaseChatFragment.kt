@@ -41,7 +41,7 @@ open class MyTUIBaseChatFragment : BaseFragment() {
 
     private var mPresenter: ChatPresenter? = null
     protected open var mChatInfo: ChatInfo? = null
-    private lateinit var mHelper: ChatLayoutSetting
+    protected lateinit var mHelper: ChatLayoutSetting
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,14 +52,18 @@ open class MyTUIBaseChatFragment : BaseFragment() {
         mBinding = FragmentChatBinding.inflate(inflater)
         val bundle = arguments ?: return mBinding.root
 
-        var startTime = 0
+        var startTime: Long = 0
         mChatInfo?.let {
-            startTime = requireActivity().getSharedPreferences(CONVERSATION_DURATION, Context.MODE_PRIVATE)
-                .getInt(it.id, 0)
+            startTime =
+                requireActivity().getSharedPreferences(CONVERSATION_DURATION, Context.MODE_PRIVATE)
+                    .getLong(it.id, System.currentTimeMillis())
+            if (startTime < 0) {
+                disableConversation()
+                return mBinding.root
+            }
         }
         Log.e("ChatFrag", "get: chatId: ${mChatInfo?.id}, startTime: $startTime")
 
-        // TODO 通过api设置ChatLayout各种属性的样例
         mHelper = ChatLayoutSetting()
         mHelper.setGroupId(mChatInfo?.id)
         mHelper.setStartTime(startTime)
@@ -159,6 +163,17 @@ open class MyTUIBaseChatFragment : BaseFragment() {
         }
     }
 
+    private fun disableConversation() {
+        // TODO 禁用输入框等内容
+        requireActivity().getSharedPreferences(CONVERSATION_DURATION, Context.MODE_PRIVATE).edit {
+            if (mChatInfo == null) {
+                return
+            }
+            remove(mChatInfo!!.id)
+            Log.e("ChatFrag", "remove: charId: ${mChatInfo?.id}")
+        }
+    }
+
     @Suppress("unchecked_cast")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -234,7 +249,7 @@ open class MyTUIBaseChatFragment : BaseFragment() {
             if (mChatInfo == null) {
                 return
             }
-            putInt(mChatInfo!!.id, duringTime)
+            putLong(mChatInfo!!.id, System.currentTimeMillis() - duringTime)
             Log.e("ChatFrag", "store: charId: ${mChatInfo?.id}, duringTime: $duringTime")
         }
         mBinding.chatLayout.inputLayout?.setDraft()
@@ -247,8 +262,8 @@ open class MyTUIBaseChatFragment : BaseFragment() {
         mBinding.chatLayout.exitChat()
     }
 
-    private companion object {
-        val TAG: String = MyTUIBaseChatFragment::class.java.simpleName
-        const val CONVERSATION_DURATION = "conversationDuration"
+    companion object {
+        private const val TAG: String = "MyTUIBaseChatFragment"
+        const val CONVERSATION_DURATION = "conversationStart"
     }
 }

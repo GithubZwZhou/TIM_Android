@@ -7,10 +7,9 @@
 
     <data>
 
-<!--        <variable-->
-<!--            name="beanWrapper"-->
-<!--            type="com.tencent.qcloud.tim.demo.contact.ContactItemBeanWrapper" />-->
-
+        <variable
+            name="beanWrapper"
+            type="com.tencent.qcloud.tim.demo.contact.ContactItemBeanWrapper" />
     </data>
 
     <LinearLayout
@@ -19,10 +18,10 @@
         android:background="?attr/core_bg_color"
         android:orientation="vertical">
 
-<!--        <com.tencent.qcloud.tuicore.component.TitleBarLayout-->
-<!--            android:id="@+id/friend_titlebar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="@dimen/page_title_height" />-->
+        <com.tencent.qcloud.tuicore.component.TitleBarLayout
+            android:id="@+id/chat_finish_titlebar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/page_title_height" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -78,17 +77,19 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentStart="true"
                                 android:layout_centerInParent="false"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginTop="5dp"
                                 android:clickable="false"
                                 android:ellipsize="end"
                                 android:focusable="false"
                                 android:singleLine="true"
+                                android:text="@{beanWrapper.target}"
                                 android:textColor="@color/black_font_color"
                                 android:textSize="17.28sp"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 tools:text="Friend 12138" />
 
-<!--                            android:text="@{beanWrapper.target}"-->
                             <RatingBar
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -106,16 +107,20 @@
                         android:layout_height="0.5dp"
                         android:layout_alignParentBottom="true"
                         android:layout_marginStart="73.78dp"
-                        android:background="@color/split_lint_color" />
+                        android:background="@color/split_lint_color"
+                        android:paddingTop="5dp" />
 
                 </RelativeLayout>
 
                 <!--总共用时-->
                 <TextView
+                    android:id="@+id/tv_conversation_cost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15.36dp"
                     android:background="@color/white"
+                    android:paddingStart="15.36dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="15.36dp"
                     android:paddingBottom="10dp"
                     android:text="@string/conversation_cost"
                     tools:text="咨询师 Friend 已为您服务 5 分钟，是否愿意就他的服务进行反馈？" />
@@ -124,9 +129,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -143,6 +146,8 @@
                         android:layout_height="138dp"
                         android:background="@color/white"
                         android:gravity="top"
+                        android:paddingStart="15.36dp"
+                        android:paddingEnd="15.36dp"
                         android:hint=""
                         android:inputType="text"
                         android:maxLines="5" />
@@ -155,132 +160,43 @@
                         android:text="@string/conversation_star"
                         tools:text="请对其服务进行打分" />
 
-                    <RatingBar
-                        android:id="@+id/comment_star"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
-                        android:background="@color/white"
-                        android:numStars="5"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="7dp"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/white">
+
+                        <RatingBar
+                            android:id="@+id/comment_star"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="10dp"
+                            android:numStars="5"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-
-                <LinearLayout
+                <!--提交评价按钮-->
+                <Button
+                    android:id="@+id/btn_commit_comment"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="@dimen/contact_profile_btn_height"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/btn_bg_color"
+                    android:text="@string/commit_comment_str"
+                    android:textAllCaps="false"
+                    android:textColor="?attr/core_primary_color"
+                    android:textSize="@dimen/contact_profile_btn_text_size"
+                    tools:text="提交评价" />
 
-                    <Button
-                        android:id="@+id/add_friend_send_btn"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/contact_profile_btn_height"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/btn_bg_color"
-                        android:text="@string/contact_add"
-                        android:textAllCaps="false"
-                        android:textColor="?attr/core_primary_color"
-                        android:textSize="@dimen/contact_profile_btn_text_size"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-                    <Button
-                        android:id="@+id/accept_friend_send_btn"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/contact_profile_btn_height"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/btn_bg_color"
-                        android:text="@string/accept"
-                        android:textAllCaps="false"
-                        android:textColor="?attr/core_primary_color"
-                        android:textSize="@dimen/contact_profile_btn_text_size"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-                    <Button
-                        android:id="@+id/btn_chat"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/contact_profile_btn_height"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/btn_bg_color"
-                        android:text="@string/profile_chat"
-                        android:textAllCaps="false"
-                        android:textColor="?attr/core_primary_color"
-                        android:textSize="@dimen/contact_profile_btn_text_size"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-                    <Button
-                        android:id="@+id/btn_voice"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/contact_profile_btn_height"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginTop="0.68dp"
-                        android:background="@drawable/btn_bg_color"
-                        android:text="@string/profile_voice_chat"
-                        android:textAllCaps="false"
-                        android:textColor="?attr/core_primary_color"
-                        android:textSize="@dimen/contact_profile_btn_text_size"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-                    <Button
-                        android:id="@+id/btn_video"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/contact_profile_btn_height"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginTop="0.68dp"
-                        android:background="@drawable/btn_bg_color"
-                        android:text="@string/profile_video_chat"
-                        android:textAllCaps="false"
-                        android:textColor="?attr/core_primary_color"
-                        android:textSize="@dimen/contact_profile_btn_text_size"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-                    <Button
-                        android:id="@+id/btn_delete"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/contact_profile_btn_height"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginTop="0.68dp"
-                        android:background="@drawable/btn_bg_color"
-                        android:text="@string/profile_delete_friend"
-                        android:textAllCaps="false"
-                        android:textColor="?attr/core_error_tip_color"
-                        android:textSize="@dimen/contact_profile_btn_text_size"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-                    <Button
-                        android:id="@+id/refuse_friend_send_btn"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/contact_profile_btn_height"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginTop="0.6dp"
-                        android:background="@drawable/btn_bg_color"
-                        android:text="@string/refuse"
-                        android:textAllCaps="false"
-                        android:textColor="?attr/core_error_tip_color"
-                        android:textSize="@dimen/contact_profile_btn_text_size"
-                        android:visibility="gone"
-                        tools:visibility="visible" />
-
-                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

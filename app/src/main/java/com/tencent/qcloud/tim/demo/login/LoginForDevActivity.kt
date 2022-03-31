@@ -19,7 +19,6 @@ import com.tencent.qcloud.tim.demo.DemoApplication
 import com.tencent.qcloud.tim.demo.R
 import com.tencent.qcloud.tim.demo.bean.UserInfo
 import com.tencent.qcloud.tim.demo.databinding.LoginForDevActivityBinding
-import com.tencent.qcloud.tim.demo.login.LanguageSelectActivity.Companion.startSelectLanguage
 import com.tencent.qcloud.tim.demo.main.MainActivity
 import com.tencent.qcloud.tim.demo.signature.GenerateTestUserSig
 import com.tencent.qcloud.tim.demo.utils.DemoLog
@@ -41,9 +40,11 @@ class LoginForDevActivity : BaseLightActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         languageChangedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 initActivity()
+                setCurrentTheme()
             }
         }
         themeChangedReceiver = object : BroadcastReceiver() {
@@ -67,6 +68,7 @@ class LoginForDevActivity : BaseLightActivity() {
     private fun initActivity() {
         mBinding = LoginForDevActivityBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
         val decorView = window.decorView
         decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
@@ -112,7 +114,9 @@ class LoginForDevActivity : BaseLightActivity() {
         })
         mBinding.loginUser.setText(UserInfo.instance.userId)
         mBinding.loginUser.setText(UserInfo.instance.password)
-        mBinding.languageArea.setOnClickListener { startSelectLanguage(this@LoginForDevActivity) }
+        mBinding.languageArea.setOnClickListener {
+            LanguageSelectActivity.startSelectLanguage(this@LoginForDevActivity)
+        }
         mBinding.modifyTheme.setOnClickListener {
             ThemeSelectActivity.startSelectTheme(this@LoginForDevActivity)
         }

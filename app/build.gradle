@@ -79,6 +79,7 @@ dependencies {
     implementation fileTree(include: ['*.jar','*.aar'], dir: '../libs')
 
     implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.activity:activity-ktx:1.3.0'
     implementation 'com.squareup.okhttp3:okhttp:3.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
@@ -118,6 +119,7 @@ dependencies {
 
     implementation "com.tencent.liteav:LiteAVSDK_TRTC:latest.release"
 
+    api project(':tuicore')
     api project(':tuiconversation')
     api project(':tuicontact')
     api project(':tuichat')

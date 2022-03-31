@@ -9,10 +9,6 @@
         <variable
             name="beanWrapper"
             type="com.tencent.qcloud.tim.demo.contact.ContactItemBeanWrapper" />
-<!--        <variable-->
-<!--            name="beanWrapper"-->
-<!--            type="com.tencent.qcloud.tuikit.tuicontact.bean.ContactItemBean" />-->
-
     </data>
 
     <RelativeLayout

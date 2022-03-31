@@ -167,4 +167,13 @@
 
     <string name="demo_profile_detail">Details</string>
 
+
+    <!--咨询师耗时-->
+    <string name="conversation_cost">
+        Doctor %s has served you for %s minutes, would you like to give him a feedback?
+    </string>
+    <string name="conversation_comment">Comments</string>
+    <string name="conversation_star">Star</string>
+    <string name="commit_comment_str">提交评价</string>
+
 </resources>
