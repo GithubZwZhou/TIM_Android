@@ -8,6 +8,7 @@ import com.tencent.qcloud.tim.demo.R
 import com.tencent.qcloud.tim.demo.databinding.ActivityChatFinishBinding
 import com.tencent.qcloud.tuicore.component.activities.BaseLightActivity
 import com.tencent.qcloud.tuicore.component.imageEngine.impl.GlideEngine
+import com.tencent.qcloud.tuicore.component.interfaces.ITitleBarLayout
 import com.tencent.qcloud.tuicore.util.ToastUtil
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog
 
@@ -17,7 +18,7 @@ class ChatFinishActivity : BaseLightActivity() {
     private val mViewModel: ChatFinishViewModel by viewModels {
         ChatFinishViewModelProvider()
     }
-    private var mStartTime = 0
+    private var mStartTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         TUIChatLog.i(TAG, "init activity")
@@ -29,9 +30,16 @@ class ChatFinishActivity : BaseLightActivity() {
         Log.e(TAG, "chatId: $chatId")
         if (!chatId.isNullOrEmpty()) {
             mStartTime = getSharedPreferences(MyTUIBaseChatFragment.CONVERSATION_DURATION, Context.MODE_PRIVATE)
-                .getInt(chatId, 0)
+                .getLong(chatId, 0)
+            mStartTime = (System.currentTimeMillis() - mStartTime) / 1000
             mStartTime /= 60
             mViewModel.getUserContactWrapperInfo(chatId)
+        }
+
+        mBinding.chatFinishTitlebar.setTitle("服务评价", ITitleBarLayout.Position.MIDDLE)
+
+        mBinding.chatFinishTitlebar.leftIcon.setOnClickListener {
+            finish()
         }
 
         registerObservers()

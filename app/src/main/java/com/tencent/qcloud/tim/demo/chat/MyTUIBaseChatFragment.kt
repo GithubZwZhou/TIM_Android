@@ -30,8 +30,10 @@ import com.tencent.qcloud.tuikit.tuichat.bean.message.TextMessageBean
 import com.tencent.qcloud.tuikit.tuichat.component.AudioPlayer
 import com.tencent.qcloud.tuikit.tuichat.presenter.ChatPresenter
 import com.tencent.qcloud.tuikit.tuichat.ui.interfaces.OnItemClickListener
+import com.tencent.qcloud.tuikit.tuichat.ui.view.ChatView
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatLog
 import com.tencent.qcloud.tuikit.tuichat.util.TUIChatUtils
+import kotlin.reflect.KClass
 
 open class MyTUIBaseChatFragment : BaseFragment() {
     protected lateinit var mBinding: FragmentChatBinding
@@ -57,9 +59,12 @@ open class MyTUIBaseChatFragment : BaseFragment() {
             startTime =
                 requireActivity().getSharedPreferences(CONVERSATION_DURATION, Context.MODE_PRIVATE)
                     .getLong(it.id, System.currentTimeMillis())
-            if (startTime < 0) {
+            requireActivity().getSharedPreferences(CONVERSATION_DURATION, Context.MODE_PRIVATE).edit {
+                putLong(it.id, startTime)
+            }
+            // 这里需要判断是否在等待中 true
+            if (startTime <= 0 && false) {
                 disableConversation()
-                return mBinding.root
             }
         }
         Log.e("ChatFrag", "get: chatId: ${mChatInfo?.id}, startTime: $startTime")
@@ -163,6 +168,17 @@ open class MyTUIBaseChatFragment : BaseFragment() {
         }
     }
 
+    private fun getLastMsgTime(): Long {
+        val clazz: Class<ChatView> = ChatView::class.java
+        mBinding.chatLayout.getConversationLastMessage(mChatInfo?.id)
+        val field = clazz.getDeclaredField("mConversationLastMessage")
+        field.isAccessible = true
+        val lastMsg = field
+            .get(mBinding.chatLayout) as TUIMessageBean?
+        Log.e(TAG, "lastMsg.msgTime: ${lastMsg?.messageTime}")
+        return lastMsg?.messageTime ?: System.currentTimeMillis()
+    }
+
     private fun disableConversation() {
         // TODO 禁用输入框等内容
         requireActivity().getSharedPreferences(CONVERSATION_DURATION, Context.MODE_PRIVATE).edit {
@@ -239,6 +255,7 @@ open class MyTUIBaseChatFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         mPresenter?.isChatFragmentShow = true
+        mHelper.setLastMsgTime(getLastMsgTime())
         mHelper.startChronometer()
     }
 
@@ -249,7 +266,7 @@ open class MyTUIBaseChatFragment : BaseFragment() {
             if (mChatInfo == null) {
                 return
             }
-            putLong(mChatInfo!!.id, System.currentTimeMillis() - duringTime)
+//            putLong(mChatInfo!!.id, System.currentTimeMillis() - duringTime)
             Log.e("ChatFrag", "store: charId: ${mChatInfo?.id}, duringTime: $duringTime")
         }
         mBinding.chatLayout.inputLayout?.setDraft()

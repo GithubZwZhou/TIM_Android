@@ -10,6 +10,11 @@ import com.tencent.qcloud.tuikit.tuichat.ui.view.message.MessageRecyclerView
 class ChatLayoutSetting {
     private var groupId: String? = null
     private var conversationDuring = 0L
+
+    /**
+     * 上一条消息的发送时间，注意这里的时间是以会话开始的时间作为起始时间
+     */
+    private var lastMsgTime = 0L
     private var mRunnable: Runnable? = null
     private lateinit var startTimeHandler: Handler
 
@@ -18,7 +23,16 @@ class ChatLayoutSetting {
     }
 
     fun setStartTime(time: Long) {
-        conversationDuring = System.currentTimeMillis() - time
+        conversationDuring = (System.currentTimeMillis() - time) / 1000
+        Log.e(TAG, "conversationDuring: $conversationDuring")
+    }
+
+    /**
+     * 传入的是标准意义的时间，需要转化
+     */
+    fun setLastMsgTime(time: Long) {
+        Log.e(TAG, "lastMsg: $time --- currTime: ${System.currentTimeMillis()}")
+        lastMsgTime = (System.currentTimeMillis() - time) / 1000
     }
 
     fun customizeChatLayout(layout: ChatView) {
@@ -36,24 +50,24 @@ class ChatLayoutSetting {
     }
 
     fun startChronometer() {
-        Log.e("ChatLSetting", "mChronometer start")
+        Log.e(TAG, "mChronometer start")
         mRunnable = object : Runnable {
             override fun run() {
                 conversationDuring += 1
-                if (conversationDuring == CONVERSATION_END) {
+                Log.e(TAG, "conversationDuring: $conversationDuring, -- lastMsgTime: $lastMsgTime")
+                if (conversationDuring - lastMsgTime == CONVERSATION_END) {
                     // TODO 结束会话
                     stopChronometer()
-                } else if (conversationDuring >= CONVERSATION_WARN) {
+                } else if (conversationDuring - lastMsgTime >= CONVERSATION_WARN) {
                     // TODO 提醒用户
-                } else {
-                    // 更新计时
-                    val msg = Message.obtain()
-                    msg.what = MSG_TYPE.UPDATE_TITLE_MSG_TYPE.ordinal
-                    msg.obj =
-                        "${conversationDuring / 3600}:${conversationDuring / 60 % 60}:${conversationDuring % 60}"
-                    startTimeHandler.sendMessage(msg)
-                    startTimeHandler.postDelayed(this, 1000)
                 }
+                // 更新计时
+                val msg = Message.obtain()
+                msg.what = MSG_TYPE.UPDATE_TITLE_MSG_TYPE.ordinal
+                msg.obj =
+                    "${conversationDuring / 3600}:${conversationDuring / 60 % 60}:${conversationDuring % 60}"
+                startTimeHandler.sendMessage(msg)
+                startTimeHandler.postDelayed(this, 1000)
             }
         }
         startTimeHandler.post(mRunnable!!)

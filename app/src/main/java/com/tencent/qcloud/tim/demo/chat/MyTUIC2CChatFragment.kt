@@ -32,7 +32,6 @@ class MyTUIC2CChatFragment : MyTUIBaseChatFragment() {
 
     override fun initView() {
         super.initView()
-        // TODO 这里的入口是完成评价的界面
         mTitleBar.setOnRightClickListener {
             val intent = Intent(requireActivity(), ChatFinishActivity::class.java)
             intent.putExtra("chatId", mChatInfo!!.id)
