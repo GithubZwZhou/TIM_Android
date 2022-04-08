@@ -10,9 +10,11 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.tencent.imsdk.v2.V2TIMCallback
 import com.tencent.qcloud.tim.demo.DemoApplication
@@ -35,6 +37,9 @@ import com.tencent.qcloud.tuicore.util.ToastUtil
  */
 class LoginForDevActivity : BaseLightActivity() {
     private lateinit var mBinding: LoginForDevActivityBinding
+    private val mViewModel: LoginViewModel by viewModels {
+        LoginViewModelProvider()
+    }
     private var languageChangedReceiver: BroadcastReceiver? = null
     private var themeChangedReceiver: BroadcastReceiver? = null
 
@@ -78,23 +83,26 @@ class LoginForDevActivity : BaseLightActivity() {
         PermissionUtils.checkPermission(this)
         mBinding.loginBtn.setOnClickListener {
             DemoApplication.mApplication!!.init()
-            UserInfo.instance.userId = mBinding.loginUser.text.toString()
-            // 获取userSig函数
-            val userSig = GenerateTestUserSig.genTestUserSig(mBinding.loginUser.text.toString())
-            UserInfo.instance.userSig = userSig
-            login(mBinding.loginUser.text.toString(), userSig, object : V2TIMCallback {
-                override fun onError(code: Int, desc: String) {
-                    runOnUiThread { ToastUtil.toastLongMessage(getString(R.string.failed_login_tip) + ", errCode = " + code + ", errInfo = " + desc) }
-                    DemoLog.i(TAG, "imLogin errorCode = $code, errorInfo = $desc")
-                }
+            UserInfo.instance.phone = mBinding.loginUser.text.toString()
+            UserInfo.instance.password = mBinding.loginPwd.text.toString()
+            mViewModel.localLogin(UserInfo.instance) {
+                // 获取userSig函数
+                val userSig = GenerateTestUserSig.genTestUserSig(mBinding.loginUser.text.toString())
+                UserInfo.instance.userSig = userSig
+                login(mBinding.loginUser.text.toString(), userSig, object : V2TIMCallback {
+                    override fun onError(code: Int, desc: String) {
+                        runOnUiThread { ToastUtil.toastLongMessage(getString(R.string.failed_login_tip) + ", errCode = " + code + ", errInfo = " + desc) }
+                        DemoLog.i(TAG, "imLogin errorCode = $code, errorInfo = $desc")
+                    }
 
-                override fun onSuccess() {
-                    UserInfo.instance.isAutoLogin = true
-                    val intent = Intent(this@LoginForDevActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-            })
+                    override fun onSuccess() {
+                        UserInfo.instance.isAutoLogin = true
+                        val intent = Intent(this@LoginForDevActivity, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                })
+            }
         }
         mBinding.loginUser.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -123,6 +131,10 @@ class LoginForDevActivity : BaseLightActivity() {
         mBinding.goRegisterBtn.setOnClickListener {
             val intent = Intent(this, RegisterForDevActivity::class.java)
             startActivity(intent)
+        }
+        mViewModel.message.observe(this) {
+            Log.e(TAG, it)
+            runOnUiThread { ToastUtil.toastShortMessage(it) }
         }
     }
 

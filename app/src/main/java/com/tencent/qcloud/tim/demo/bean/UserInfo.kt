@@ -52,9 +52,30 @@ class UserInfo private constructor() : Serializable {
             field = autoLogin
             setUserInfo(this)
         }
+    var userActualName: String? = ""
+        set(value) {
+            field = value
+            setUserInfo(this)
+        }
+    var emergencyName: String? = ""
+        set(value) {
+            field = value
+            setUserInfo(this)
+        }
+    var emergencyNumber: String? = ""
+        set(value) {
+            field = value
+            setUserInfo(this)
+        }
+    var userIdLocal: String? = ""
+        set(value) {
+            field = value
+            setUserInfo(this)
+        }
 
     private fun setUserInfo(info: UserInfo) {
-        val shareInfo = DemoApplication.mApplication!!.getSharedPreferences(TUIKitConstants.USERINFO, 0)
+        val shareInfo =
+            DemoApplication.mApplication!!.getSharedPreferences(TUIKitConstants.USERINFO, 0)
         val editor = shareInfo.edit()
         editor.putString(PER_USER_MODEL, Gson().toJson(info))
         editor.apply()
@@ -69,7 +90,10 @@ class UserInfo private constructor() : Serializable {
         val instance: UserInfo
             get() {
                 if (sUserInfo == null) {
-                    val shareInfo = DemoApplication.mApplication!!.getSharedPreferences(TUIKitConstants.USERINFO, 0)
+                    val shareInfo = DemoApplication.mApplication!!.getSharedPreferences(
+                        TUIKitConstants.USERINFO,
+                        0
+                    )
                     val json = shareInfo.getString(PER_USER_MODEL, "")
                     sUserInfo = Gson().fromJson(json, UserInfo::class.java)
                     if (sUserInfo == null) {

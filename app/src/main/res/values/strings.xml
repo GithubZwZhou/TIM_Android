@@ -2,6 +2,7 @@
     <string name="app_name">Instant Messaging (IM)</string>
 
     <string name="welcome_tip">Thank you for joining Instant Messaging!</string>
+    <string name="end_tip">Nice to talk to you, see you again!</string>
     <string name="test_custom_action">Custom Messages</string>
 
     <string name="test_custom_message">View Details>></string>
@@ -36,7 +37,7 @@
     <string name="password_login">Log in via password</string>
     <string name="official_website">Visit Us</string>
     <string name="debug_mode_summary">IM login screen that is only visible in debug mode.</string>
-    <string name="account_hint">Enter Your Account Name</string>
+    <string name="account_hint">Enter Your Nick Name</string>
     <string name="password_hint">Enter Your Password</string>
     <string name="actual_name_hint">Enter Your Actual Name</string>
 
